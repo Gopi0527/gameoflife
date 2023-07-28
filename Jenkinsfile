@@ -6,6 +6,9 @@ pipeline {
     tools {
         jdk 'JDK-8'
     }
+    parameters { choice(name: 'GOAL',
+                choices: ['package', 'install', 'clean install','clean package'], description: 'Tis is maven goal') 
+    }
         stages {
             stage('vcs') {
                 steps {
@@ -15,7 +18,7 @@ pipeline {
             }
             stage('build and package') {
                 steps {
-                   sh script: 'mvn package'
+                   sh script: "mvn $[params.GOAL]
                 }
             }
             stage('reporting') {
@@ -26,4 +29,17 @@ pipeline {
             }
             
         }
+        post{
+            success{
+                mail subject:"${JOB_NAME}:project has complete success",
+                body: "your projrct is effective \n Build url is ${BUILD_URL}",
+                to: 'all@ww.com'
+            }
+            failure {
+                mail subject:"${JOB_NAME}:project has complete success",
+                body: "your projrct is deffective \n Build url is ${BUILD_URL}",
+                to: 'all@ww.com'
+            }
+        }
+    
     }
