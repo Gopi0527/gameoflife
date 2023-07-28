@@ -3,9 +3,6 @@ pipeline {
     options{
         timeout(time: 30, unit: 'MINUTES')
     }
-    triggers{
-        pollSCM (* * * * *)
-    }
         stages {
             stage('vcs') {
                 steps {
@@ -13,7 +10,7 @@ pipeline {
                     branch: 'master'
                 }
             }
-            stage('build nad package') {
+            stage('build and package') {
                 steps {
                     sh script: 'mvn package'
                 }
